@@ -1,0 +1,376 @@
+1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+DAA1DAA1DAA1DAA1DAA1vvvvDAA1DAA1vDAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1DAA1vDAA1v
+# Recursive Function
+def fibonacci_recursive(n):
+    if n <= 1:
+        return n
+    return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+
+
+# Non-Recursive Function
+def fibonacci_non_recursive(n):
+    a, b = 0, 1
+
+    for i in range(n):
+        print(a, end=" ")
+        a, b = b, a + b
+
+
+# Main Program
+print("===== Fibonacci Series =====")
+print("1. Recursive Approach")
+print("2. Non-Recursive Approach")
+
+choice = int(input("Enter your choice: "))
+
+n = int(input("Enter the number of terms: "))
+
+if n <= 0:
+    print("Please enter a positive number.")
+
+elif choice == 1:
+    print("\nFibonacci Series (Recursive):")
+
+    for i in range(n):
+        print(fibonacci_recursive(i), end=" ")
+
+elif choice == 2:
+    print("\nFibonacci Series (Non-Recursive):")
+    fibonacci_non_recursive(n)
+
+else:
+    print("Invalid choice! Please select 1 or 2.")
+
+print()
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2DAA2
+
+
+def job_sequencing(jobs):
+
+    # Sort jobs according to profit in descending order
+    jobs.sort(key=lambda x: x[2], reverse=True)
+
+    # Find maximum deadline
+    max_deadline = max(job[1] for job in jobs)
+
+    # Initialize time slots
+    slots = [None] * max_deadline
+
+    total_profit = 0
+
+    # Schedule jobs
+    for job in jobs:
+        job_id, deadline, profit = job
+
+        # Find latest available slot
+        for j in range(min(deadline, max_deadline) - 1, -1, -1):
+
+            if slots[j] is None:
+                slots[j] = job_id
+                total_profit += profit
+                break
+
+    # Display scheduled jobs
+    print("\nScheduled Jobs:")
+
+    for i in range(max_deadline):
+        if slots[i] is not None:
+            print(f"Time Slot {i + 1}: {slots[i]}")
+
+    print("\nTotal Profit:", total_profit)
+
+
+# Main Program
+print("===== Job Sequencing with Deadlines =====")
+
+n = int(input("Enter number of jobs: "))
+
+jobs = []
+
+for i in range(n):
+    print(f"\nEnter details for Job {i + 1}:")
+
+    job_id = input("Job ID: ")
+    deadline = int(input("Deadline: "))
+    profit = int(input("Profit: "))
+
+    jobs.append((job_id, deadline, profit))
+
+job_sequencing(jobs)
+
+# --- END -------
+
+33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3DAA3
+
+
+
+import heapq
+
+# Node class for Huffman Tree
+class Node:
+    def __init__(self, char, freq):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+
+# Generate Huffman Codes
+def generate_codes(root, code, huffman_codes):
+
+    if root is None:
+        return
+
+    # Leaf node
+    if root.char is not None:
+        huffman_codes[root.char] = code if code else "0"
+        return
+
+    generate_codes(root.left, code + "0", huffman_codes)
+    generate_codes(root.right, code + "1", huffman_codes)
+
+
+# Huffman Encoding
+def huffman_encoding(text):
+
+    if not text:
+        print("Input text cannot be empty.")
+        return
+
+    # Calculate character frequencies
+    frequency = {}
+
+    for char in text:
+        frequency[char] = frequency.get(char, 0) + 1
+
+    # Create priority queue
+    heap = []
+
+    for char, freq in frequency.items():
+        heapq.heappush(heap, Node(char, freq))
+
+    # Build Huffman Tree
+    while len(heap) > 1:
+
+        left = heapq.heappop(heap)
+        right = heapq.heappop(heap)
+
+        merged = Node(None, left.freq + right.freq)
+        merged.left = left
+        merged.right = right
+
+        heapq.heappush(heap, merged)
+
+    # Generate Huffman Codes
+    root = heapq.heappop(heap)
+    huffman_codes = {}
+
+    generate_codes(root, "", huffman_codes)
+
+    # Display results
+    print("\nCharacter Frequencies and Huffman Codes:")
+
+    for char, freq in frequency.items():
+        display_char = "Space" if char == " " else char
+        print(f"{display_char} : Frequency = {freq}, Code = {huffman_codes[char]}")
+
+    # Encode input text
+    encoded_text = ""
+
+    for char in text:
+        encoded_text += huffman_codes[char]
+
+    print("\nOriginal Text:", text)
+    print("Encoded Text:", encoded_text)
+
+
+# Main Program
+print("===== Huffman Encoding =====")
+
+text = input("Enter a string: ")
+
+huffman_encoding(text)
+
+
+44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4DAA4
+
+
+n = int(input("Enter number of items: "))
+
+weight = []
+profit = []
+ratio = []
+
+# Accept weight and profit of each item
+for i in range(n):
+    w = float(input("Enter weight: "))
+    p = float(input("Enter profit: "))
+
+    weight.append(w)
+    profit.append(p)
+
+    # Calculate profit/weight ratio
+    ratio.append(p / w)
+
+capacity = float(input("Enter knapsack capacity: "))
+
+# Sort items according to ratio in descending order
+for i in range(n):
+    for j in range(i + 1, n):
+
+        if ratio[i] < ratio[j]:
+
+            # Swap ratios
+            ratio[i], ratio[j] = ratio[j], ratio[i]
+
+            # Swap corresponding weights
+            weight[i], weight[j] = weight[j], weight[i]
+
+            # Swap corresponding profits
+            profit[i], profit[j] = profit[j], profit[i]
+
+# Calculate maximum profit
+total_profit = 0
+
+for i in range(n):
+
+    # If complete item fits in knapsack
+    if weight[i] <= capacity:
+        total_profit += profit[i]
+        capacity -= weight[i]
+
+    # If only a fraction of item fits
+    else:
+        total_profit += ratio[i] * capacity
+        capacity = 0
+        break
+
+# Display maximum profit
+print("Maximum Profit:", total_profit)
+
+55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555
+DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5DAA5
+
+
+# 0/1 Knapsack using Dynamic Programming
+n = int(input("Enter number of items: "))
+
+weight = []
+profit = []
+
+# Accept item weights and profits
+for i in range(n):
+    w = int(input("Enter weight: "))
+    p = int(input("Enter profit: "))
+
+    weight.append(w)
+    profit.append(p)
+
+capacity = int(input("Enter knapsack capacity: "))
+
+# Create DP table initialized with 0
+dp = [[0 for j in range(capacity + 1)]
+      for i in range(n + 1)]
+
+# Fill the DP table
+for i in range(1, n + 1):
+
+    for j in range(1, capacity + 1):
+
+        # If item weight is less than or equal to capacity
+        if weight[i - 1] <= j:
+
+            # Maximum of including or excluding the item
+            dp[i][j] = max(
+                profit[i - 1] + dp[i - 1][j - weight[i - 1]],
+                dp[i - 1][j]
+            )
+
+        else:
+            # Exclude the item
+            dp[i][j] = dp[i - 1][j]
+
+# Display maximum profit
+print("\nMaximum Profit:", dp[n][capacity])
+
+print("===== 0/1 Knapsack using Branch and Bound =====")
+
+n = int(input("Enter number of items: "))
+
+weight = []
+profit = []
+
+for i in range(n):
+    w = int(input("Enter weight: "))
+    p = int(input("Enter profit: "))
+
+    weight.append(w)
+    profit.append(p)
+
+capacity = int(input("Enter knapsack capacity: "))
+
+result = knapsack_branch_bound(weight, profit, capacity)
+
+print("\nMaximum Profit:", result)
+
+
+BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3BT3
+
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract BankAccount {
+
+    address public owner;
+
+    mapping(address => uint256) private balances;
+
+    event Deposited(address indexed user, uint256 amount);
+    event Withdrawn(address indexed user, uint256 amount);
+
+    // Constructor
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // 1. Deposit money
+    function deposit() public payable {
+        require(msg.value > 0, "Deposit must be greater than 0");
+
+        balances[msg.sender] += msg.value;
+
+        emit Deposited(msg.sender, msg.value);
+    }
+
+    // 2. Withdraw money
+    function withdraw(uint256 amount) public {
+        require(amount > 0, "Amount must be greater than 0");
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        balances[msg.sender] -= amount;
+
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+
+        require(success, "Transfer failed");
+
+        emit Withdrawn(msg.sender, amount);
+    }
+
+    // 3. Show customer balance
+    function showBalance() public view returns (uint256) {
+        return balances[msg.sender];
+    }
+
+    // 4. Show total contract balance
+    function contractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+}
